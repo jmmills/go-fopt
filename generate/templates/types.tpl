@@ -7,7 +7,8 @@ type {{.Singular}} func(s *{{.Source}})
 // {{.Plural}} defines a plural set of {{.Singular}}
 type {{.Plural}} []{{.Singular}}
 
-func (opts {{.Plural}}) apply(s *{{.Source}}) {{.Source}} {
+// Apply will apply a set of options to a pointer to a given {{.Source}}
+func (opts {{.Plural}}) Apply(s *{{.Source}}) {{.Source}} {
     for _, opt := range opts {
         opt(s)
     }
@@ -15,7 +16,8 @@ func (opts {{.Plural}}) apply(s *{{.Source}}) {{.Source}} {
 }
 
 {{- range .Options }}
-{{if .IsSlice}}
+// {{$.OptionPrefix}}{{.Name}} will set the {{.Field}} option for {{$.Source}}.
+{{- if .IsSlice}}
 func {{$.OptionPrefix}}{{.Name}}(values ...{{.Type}}) {{$.Singular}} {
     return func(s *{{$.Source}}) {
         s.{{.Field}} = append(s.{{.Field}}, values...)
@@ -27,6 +29,6 @@ func {{$.OptionPrefix}}{{.Name}}(value {{.Type}}) {{$.Singular}} {
         s.{{.Field}} = value
     }
 }
-{{end}}
+{{- end}}
 {{- end}}
 
