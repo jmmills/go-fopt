@@ -3,6 +3,7 @@ package generate
 import (
 	"bytes"
 	"embed"
+	"go/format"
 	"text/template"
 )
 
@@ -36,5 +37,9 @@ type Option struct {
 func Generate(cfg Config) ([]byte, error) {
 	buf := bytes.NewBuffer(nil)
 	err := types.Execute(buf, cfg)
-	return buf.Bytes(), err
+	if err != nil {
+		return buf.Bytes(), err
+	}
+
+	return format.Source(buf.Bytes())
 }
