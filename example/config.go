@@ -1,6 +1,6 @@
 package example
 
-//go:generate go run ../main.go go.foss.tools/generate/fopt/example Config -w options.go
+//go:generate go run go.foss.tools/generate/fopt go.foss.tools/generate/fopt/example Config -w options.go
 
 // Config is a type we are going to generate functional options for
 type Config struct {
@@ -25,6 +25,6 @@ type private struct {
 
 func New(opts ...Option) Interface {
 	return private{
-		cfg: Options(opts).apply(new(Config)),
+		cfg: Options(opts).Apply(new(Config)),
 	}
 }
