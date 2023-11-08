@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/jmmills/go-fopt/graph/badge.svg?token=K3GFRHIUQ7)](https://codecov.io/gh/jmmills/go-fopt)
+
 # fopt generates a functional options pattern for Go
 
 ```
