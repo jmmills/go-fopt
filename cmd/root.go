@@ -6,6 +6,7 @@ package cmd
 import (
 	"io"
 	"os"
+	"path"
 	"strings"
 
 	pluralize "github.com/gertd/go-pluralize"
@@ -52,11 +53,17 @@ func RunE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	var runCmd string
+
+	if len(os.Args) > 0 {
+		runCmd = strings.Join(append([]string{path.Base(os.Args[0])}, os.Args[1:]...), " ")
+	}
+
 	cfg := generate.Config{
 		Source:       args[1],
 		Singular:     optionName,
 		OptionPrefix: optionPrefix,
-		GenerateCmd:  strings.Join(os.Args, " "),
+		GenerateCmd:  runCmd,
 		Plural:       pluralize.NewClient().Plural(optionName),
 	}
 
@@ -73,7 +80,7 @@ func RunE(cmd *cobra.Command, args []string) error {
 	var writer io.WriteCloser = os.Stdout
 
 	if outputFile != "" {
-		f, err := os.OpenFile(outputFile, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0660)
+		f, err := os.OpenFile(outputFile, os.O_RDWR|os.O_TRUNC|os.O_CREATE, 0660)
 		if err != nil {
 			return err
 		}
