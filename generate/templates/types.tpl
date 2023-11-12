@@ -15,6 +15,28 @@ func (opts {{.Plural}}) Apply(s *{{.Source}}) {{.Source}} {
     return *s
 }
 
+{{- if $.WithBuilder }}
+{{- range .Options }}
+// {{$.OptionPrefix}}{{.Name}} will set the {{.Field}} option for {{$.Source}}.
+{{- if .IsSlice}}
+func (opts *{{$.Plural}}) {{$.OptionPrefix}}{{.Name}}(values ...{{.Type}}) {{$.Plural}} {
+    *opts = append(*opts, {{$.Singular}}(func(s *{{$.Source}}) {
+        s.{{.Field}} = append(s.{{.Field}}, values...)
+    }))
+    return *opts
+}
+{{else}}
+func (opts *{{$.Plural}}) {{$.OptionPrefix}}{{.Name}}(value {{.Type}}) {{$.Plural}} {
+    *opts = append(*opts, {{$.Singular}}(func(s *{{$.Source}}) {
+        s.{{.Field}} = value
+    }))
+    return *opts
+}
+{{- end}}
+{{- end}}
+{{- end}}
+
+{{- if not .NoPkgOptions }}
 {{- range .Options }}
 // {{$.OptionPrefix}}{{.Name}} will set the {{.Field}} option for {{$.Source}}.
 {{- if .IsSlice}}
@@ -31,4 +53,4 @@ func {{$.OptionPrefix}}{{.Name}}(value {{.Type}}) {{$.Singular}} {
 }
 {{- end}}
 {{- end}}
-
+{{- end}}

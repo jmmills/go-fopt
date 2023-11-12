@@ -22,6 +22,8 @@ type Config struct {
 	Source       string
 	OptionPrefix string
 	Options      []Option
+	WithBuilder  bool
+	NoPkgOptions bool
 }
 
 // Option defines a functional option to generate.
